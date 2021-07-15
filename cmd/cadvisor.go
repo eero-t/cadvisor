@@ -76,20 +76,19 @@ var perfEvents = flag.String("perf_events_config", "", "Path to a JSON file cont
 var resctrlInterval = flag.Duration("resctrl_interval", 0, "Resctrl mon groups updating interval. Zero value disables updating mon groups.")
 
 var (
-	// Metrics to be ignored.
-	// Tcp metrics are ignored by default.
+	// Metrics to be ignored, in sorted order
 	ignoreMetrics = container.MetricSet{
+		container.CPUSetMetrics:                  struct{}{},
+		container.CPUTopologyMetrics:             struct{}{},
+		container.HugetlbUsageMetrics:            struct{}{},
 		container.MemoryNumaMetrics:              struct{}{},
+		container.NetworkAdvancedTcpUsageMetrics: struct{}{},
 		container.NetworkTcpUsageMetrics:         struct{}{},
 		container.NetworkUdpUsageMetrics:         struct{}{},
-		container.NetworkAdvancedTcpUsageMetrics: struct{}{},
-		container.ProcessSchedulerMetrics:        struct{}{},
 		container.ProcessMetrics:                 struct{}{},
-		container.HugetlbUsageMetrics:            struct{}{},
+		container.ProcessSchedulerMetrics:        struct{}{},
 		container.ReferencedMemoryMetrics:        struct{}{},
-		container.CPUTopologyMetrics:             struct{}{},
 		container.ResctrlMetrics:                 struct{}{},
-		container.CPUSetMetrics:                  struct{}{},
 	}
 
 	// Metrics to be enabled.  Used only if non-empty.
