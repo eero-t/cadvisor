@@ -92,6 +92,7 @@ func TestToIncludedMetrics(t *testing.T) {
 
 	expected := []container.MetricSet{
 		{
+			container.ProcessSocketCountMetrics:      struct{}{},
 			container.ProcessSchedulerMetrics:        struct{}{},
 			container.PerCpuUsageMetrics:             struct{}{},
 			container.MemoryUsageMetrics:             struct{}{},

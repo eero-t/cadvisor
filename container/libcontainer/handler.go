@@ -174,7 +174,8 @@ func (h *Handler) GetStats() (*info.ContainerStats, error) {
 		if !ok {
 			klog.V(4).Infof("Could not find cgroups CPU for container %d", h.pid)
 		} else {
-			stats.Processes, err = processStatsFromProcs(h.rootFs, path, h.pid)
+			includeSocketCounts := h.includedMetrics.Has(container.ProcessSocketCountMetrics)
+			stats.Processes, err = processStatsFromProcs(h.rootFs, path, h.pid, includeSocketCounts)
 			if err != nil {
 				klog.V(4).Infof("Unable to get Process Stats: %v", err)
 			}
@@ -261,7 +262,7 @@ func processRootProcUlimits(rootFs string, rootPid int) []info.UlimitSpec {
 	return processLimitsFile(string(out))
 }
 
-func processStatsFromProcs(rootFs string, cgroupPath string, rootPid int) (info.ProcessStats, error) {
+func processStatsFromProcs(rootFs string, cgroupPath string, rootPid int, includeSocketCounts bool) (info.ProcessStats, error) {
 	var fdCount, socketCount uint64
 	filePath := path.Join(cgroupPath, "cgroup.procs")
 	out, err := ioutil.ReadFile(filePath)
@@ -286,6 +287,9 @@ func processStatsFromProcs(rootFs string, cgroupPath string, rootPid int) (info.
 			continue
 		}
 		fdCount += uint64(len(fds))
+		if !includeSocketCounts {
+			continue
+		}
 		for _, fd := range fds {
 			fdPath := path.Join(dirPath, fd.Name())
 			linkName, err := os.Readlink(fdPath)

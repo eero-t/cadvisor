@@ -46,6 +46,7 @@ type MetricKind string
 
 const (
 	CpuUsageMetrics                MetricKind = "cpu"
+	ProcessSocketCountMetrics      MetricKind = "sock_count"
 	ProcessSchedulerMetrics        MetricKind = "sched"
 	PerCpuUsageMetrics             MetricKind = "percpu"
 	MemoryUsageMetrics             MetricKind = "memory"
@@ -72,6 +73,7 @@ const (
 // AllMetrics represents all kinds of metrics that cAdvisor supported.
 var AllMetrics = MetricSet{
 	CpuUsageMetrics:                struct{}{},
+	ProcessSocketCountMetrics:      struct{}{},
 	ProcessSchedulerMetrics:        struct{}{},
 	PerCpuUsageMetrics:             struct{}{},
 	MemoryUsageMetrics:             struct{}{},
